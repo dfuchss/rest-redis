@@ -19,6 +19,10 @@ public class Client {
         }
     }
 
+    public boolean isBridgeAvailable() {
+        return Unirest.get("/").asString().isSuccess();
+    }
+
     public boolean ping() {
         return Unirest.get("/ping").asBytes().isSuccess();
     }

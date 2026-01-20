@@ -54,6 +54,7 @@ public class Server {
     }
 
     private static void initializeRoutes(RedisClient redisClient) {
+        get("/", (req, res) -> "REST-Redis Server is running.");
         get("/ping", (req, res) -> handlePing(res, redisClient));
         post("/exists", (req, res) -> handleExistsRequest(req, res, redisClient));
         post("/hget", (req, res) -> handleHget(req, res, redisClient));
