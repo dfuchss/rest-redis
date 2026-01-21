@@ -2,13 +2,16 @@
 package org.fuchss.restredis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.nio.file.Path;
 import java.util.UUID;
 import kong.unirest.core.Unirest;
+import org.fuchss.restredis.server.ServerConfiguration;
 
+/**
+ * Shared helpers for integration tests.
+ */
 final class TestUtilities {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -37,11 +40,7 @@ final class TestUtilities {
     }
 
     static void writeServerConfig(Path configFile, String redisHost, int redisPort, int httpPort) throws IOException {
-        ObjectNode configJson = MAPPER.createObjectNode();
-        configJson.put("redis_host", redisHost);
-        configJson.put("redis_port", redisPort);
-        configJson.put("http_port", httpPort);
-        MAPPER.writeValue(configFile.toFile(), configJson);
+        MAPPER.writeValue(configFile.toFile(), new ServerConfiguration(redisHost, redisPort, httpPort));
     }
 
     private static boolean isServerResponding(String baseUrl) {

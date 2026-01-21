@@ -20,10 +20,19 @@ import redis.clients.jedis.RedisClient;
 import spark.Request;
 import spark.Response;
 
+/**
+ * REST-Redis server entrypoint that exposes Redis operations over HTTP.
+ */
 public class Server {
     private static final Logger logger = LoggerFactory.getLogger(Server.class);
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
+    /**
+     * Starts the REST-Redis server using a configuration file path argument.
+     *
+     * @param args optional single argument pointing to the server config file
+     * @throws InterruptedException if the server thread is interrupted
+     */
     public static void main(String[] args) throws InterruptedException {
         File configFile = args.length != 1 ? new File("server_config.json") : new File(args[0]);
         ServerConfiguration configuration = ServerConfiguration.loadFromFile(configFile);

@@ -1,14 +1,13 @@
 /* Licensed under MIT 2026. */
 package org.fuchss.restredis;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.nio.file.Path;
 import kong.unirest.core.Unirest;
-import org.fuchss.restredis.client.Client;
-import org.fuchss.restredis.client.ClientConfiguration;
+import org.fuchss.restredis.dto.ExistsRequest;
+import org.fuchss.restredis.dto.HGetRequest;
+import org.fuchss.restredis.dto.HSetRequest;
 import org.fuchss.restredis.server.Server;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,9 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 /**
- * Tests server behavior when Redis is unavailable while the REST server is running.
+ * Raw endpoint behavior when Redis is unavailable.
  */
-class ClientWithoutServerTest {
+class RawEndpointWhenRedisUnavailableTest {
 
     @TempDir
     private Path tempDir;
@@ -59,12 +58,34 @@ class ClientWithoutServerTest {
     }
 
     @Test
-    void clientMethodsFailWhenRedisUnavailable() {
-        Client client = new Client(new ClientConfiguration(baseUrl, null, null));
-        assertFalse(client.ping());
-        assertTrue(client.isBridgeAvailable());
-        assertThrows(IllegalStateException.class, () -> client.exists("missing"));
-        assertThrows(IllegalStateException.class, () -> client.hget("missing", "field"));
-        assertThrows(IllegalStateException.class, () -> client.hset("missing", "field", "value"));
+    void bridgeEndpointIsAvailable() {
+        assertEquals(200, Unirest.get(baseUrl + "/").asString().getStatus());
+    }
+
+    @Test
+    void pingReportsRedisUnavailable() {
+        assertEquals(503, Unirest.get(baseUrl + "/ping").asString().getStatus());
+    }
+
+    @Test
+    void redisEndpointsReturnBadRequest() {
+        assertEquals(
+                400,
+                Unirest.post(baseUrl + "/exists")
+                        .body(new ExistsRequest("missing"))
+                        .asString()
+                        .getStatus());
+        assertEquals(
+                400,
+                Unirest.post(baseUrl + "/hget")
+                        .body(new HGetRequest("missing", "field"))
+                        .asString()
+                        .getStatus());
+        assertEquals(
+                400,
+                Unirest.post(baseUrl + "/hset")
+                        .body(new HSetRequest("missing", "field", "value"))
+                        .asString()
+                        .getStatus());
     }
 }

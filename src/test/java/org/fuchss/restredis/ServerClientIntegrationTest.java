@@ -18,6 +18,9 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
+/**
+ * Integration tests that verify client-server-Redis interaction using Testcontainers.
+ */
 @Testcontainers
 class ServerClientIntegrationTest {
 
