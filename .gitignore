@@ -40,3 +40,6 @@ build/
 
 ### IntelliJ ###
 .idea
+
+### PackageInfo files ###
+package-info.java
