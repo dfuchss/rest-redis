@@ -2,6 +2,22 @@
 
 Expose basic Redis hash operations over HTTP with a lightweight Spark-based server and a Java client.
 
+## Architecture
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Server
+    participant Redis
+    
+    Client->>Server: HTTP Request (GET / POST)
+    Note over Client,Server: /ping, /exists, /hget, /hset
+    Server->>Redis: Redis Command
+    Note over Server,Redis: PING, EXISTS, HGET, HSET
+    Redis-->>Server: Redis Response
+    Server-->>Client: HTTP Response (JSON/String)
+```
+
 ## Features
 
 - HTTP bridge for Redis using Spark Java
