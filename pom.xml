@@ -50,7 +50,7 @@
       <dependency>
         <groupId>com.konghq</groupId>
         <artifactId>unirest-java-bom</artifactId>
-        <version>4.6.0</version>
+        <version>4.7.4</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -71,7 +71,7 @@
     </dependency>
     <dependency>
       <groupId>com.konghq</groupId>
-      <artifactId>unirest-modules-jackson</artifactId>
+      <artifactId>unirest-modules-jackson-legacy</artifactId>
     </dependency>
     <dependency>
       <groupId>com.sparkjava</groupId>
