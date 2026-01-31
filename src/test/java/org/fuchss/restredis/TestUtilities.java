@@ -25,7 +25,7 @@ final class TestUtilities {
     }
 
     static void waitForServerReady(String baseUrl) throws InterruptedException {
-        long deadline = System.currentTimeMillis() + 15000;
+        long deadline = System.currentTimeMillis() + 30000;
         while (System.currentTimeMillis() < deadline) {
             if (isServerResponding(baseUrl)) {
                 return;
