@@ -2,6 +2,7 @@
 package org.fuchss.restredis.server;
 
 import static spark.Spark.awaitInitialization;
+import static spark.Spark.awaitStop;
 import static spark.Spark.get;
 import static spark.Spark.initExceptionHandler;
 import static spark.Spark.port;
@@ -59,6 +60,7 @@ public class Server {
                 redisClient.close();
             }
             stop();
+            awaitStop();
         }
     }
 
