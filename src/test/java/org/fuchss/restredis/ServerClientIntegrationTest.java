@@ -3,6 +3,7 @@ package org.fuchss.restredis;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Path;
@@ -104,8 +105,64 @@ class ServerClientIntegrationTest {
         long created = client.hset(key, field, value1);
         long updated = client.hset(key, field, value2);
 
-        assertTrue(created >= 0);
-        assertTrue(updated >= 0);
+        assertEquals(1, created);
+        assertEquals(0, updated);
         assertEquals(value2, client.hget(key, field));
+    }
+
+    @Test
+    void hsetReturnsOneForEachNewField() {
+        String key = TestUtilities.uniqueKey("multifield");
+
+        assertEquals(1, client.hset(key, "f1", "v1"));
+        assertEquals(1, client.hset(key, "f2", "v2"));
+        assertEquals(0, client.hset(key, "f1", "updated"));
+    }
+
+    @Test
+    void hgetReturnsNullForNonExistentKey() {
+        String key = TestUtilities.uniqueKey("missing-key");
+        assertNull(client.hget(key, "field"));
+    }
+
+    @Test
+    void hgetReturnsNullForNonExistentField() {
+        String key = TestUtilities.uniqueKey("missing-field");
+        client.hset(key, "existing-field", "value");
+        assertNull(client.hget(key, "non-existent-field"));
+    }
+
+    @Test
+    void hsetAndHgetEmptyStringValue() {
+        String key = TestUtilities.uniqueKey("empty-value");
+        String field = "f";
+
+        assertEquals(1, client.hset(key, field, ""));
+        assertEquals("", client.hget(key, field));
+        assertTrue(client.exists(key));
+    }
+
+    @Test
+    void hsetAndHgetSpecialCharacters() {
+        String key = TestUtilities.uniqueKey("special");
+        String field = "field with spaces";
+        String value = "value\nwith\nnewlines\tand\ttabs and \"quotes\"";
+
+        assertEquals(1, client.hset(key, field, value));
+        assertEquals(value, client.hget(key, field));
+    }
+
+    @Test
+    void existsReturnsFalseForKeyThatWasNeverSet() {
+        String key = TestUtilities.uniqueKey("never-set");
+        assertFalse(client.exists(key));
+    }
+
+    @Test
+    void existsReturnsTrueAfterHset() {
+        String key = TestUtilities.uniqueKey("created");
+        assertFalse(client.exists(key));
+        client.hset(key, "f", "v");
+        assertTrue(client.exists(key));
     }
 }

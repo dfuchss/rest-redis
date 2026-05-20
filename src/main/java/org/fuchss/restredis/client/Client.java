@@ -68,6 +68,9 @@ public class Client {
      */
     public String hget(String key, String field) {
         var request = Unirest.post("/hget").body(new HGetRequest(key, field)).asString();
+        if (request.getStatus() == 404) {
+            return null;
+        }
         if (!request.isSuccess()) {
             throw new IllegalStateException("Request failed with code: " + request.getStatus());
         }
