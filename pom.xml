@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.fuchss</groupId>
     <artifactId>maven-parent</artifactId>
-    <version>0.22.10</version>
+    <version>0.22.12</version>
   </parent>
 
   <artifactId>rest-redis</artifactId>
@@ -99,7 +99,7 @@
     <dependency>
       <groupId>redis.clients</groupId>
       <artifactId>jedis</artifactId>
-      <version>8.0.1</version>
+      <version>8.0.2</version>
     </dependency>
   </dependencies>
 
