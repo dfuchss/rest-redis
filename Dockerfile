@@ -5,7 +5,7 @@ COPY src ./src
 COPY header.txt ./header.txt
 RUN mvn -Pserver -DskipTests package
 
-FROM eclipse-temurin:21.0.12_8-jre
+FROM eclipse-temurin:21.0.13_9-jre
 WORKDIR /app
 COPY --from=build /workspace/target/*-jar-with-dependencies.jar /app/server.jar
 EXPOSE 8080
